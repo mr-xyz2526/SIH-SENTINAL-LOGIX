@@ -1,4 +1,4 @@
-// NER-LINK AI - Dynamic Incident Simulator & Network Impact Engine
+// SENTINEL LOGIX AI - Incident Simulator & Network Impact Engine
 
 window.simulating = false;
 
@@ -27,7 +27,7 @@ window.runImpactSimulation = function(type, corridorId) {
     return;
   }
 
-  // 3. Perform Simulation Logic (Simulated delay of 1.2s for hackathon aesthetic)
+  // Allow time for the simulation progress state to be visible.
   setTimeout(() => {
     // Save backup state for reset if needed
     const oldStatus = corr.status;
@@ -182,7 +182,7 @@ window.runImpactSimulation = function(type, corridorId) {
           <div class="p-3 bg-emerald-950/30 border border-emerald-500/20 rounded text-xs">
             <div class="flex items-center gap-1.5 text-emerald-400 font-bold mb-1">
               <span>🤖</span>
-              <span>NER-LINK AI Reroute Optimization</span>
+              <span>SENTINEL Reroute Optimization</span>
             </div>
             <p class="text-slate-300">
               AI successfully rerouted <b>${reroutedCount}</b> out of <b>${shipmentsCount}</b> shipments. 

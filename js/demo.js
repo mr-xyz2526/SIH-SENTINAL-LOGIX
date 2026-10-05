@@ -1,4 +1,4 @@
-// NER-LINK AI - Automated Hackathon Demonstration Controller
+// SENTINEL LOGIX AI - Guided Scenario Controller
 
 window.demoRunning = false;
 window.demoTimeoutIds = [];
@@ -144,7 +144,7 @@ window.startDemoScenario = function() {
     },
     {
       title: "Step 6: AI Reroute Optimization",
-      desc: "NER-LINK AI runs alternate routing algorithms. Simulating network backup lanes via NH-27 plains gateway.",
+      desc: "SENTINEL evaluates alternate routes using the NH-27 corridor.",
       action: () => {
         window.switchTab("routes");
         
@@ -211,7 +211,7 @@ window.startDemoScenario = function() {
             <div class="mt-4 p-4 rounded-lg bg-red-950/40 border border-red-500/30 text-slate-200">
               <div class="flex items-center gap-2 text-red-400 font-bold mb-2">
                 <span>⚡</span>
-                <span>DEMO STATUS: MONSOON LANDSLIDE ACTIVE</span>
+                <span>SCENARIO STATUS: MONSOON LANDSLIDE ACTIVE</span>
               </div>
               <p class="text-xs text-slate-300 mb-2">
                 14 shipments affected | Sikkim Accessibility score: 38% | NH-10 Corridor status: Blocked.
@@ -221,7 +221,7 @@ window.startDemoScenario = function() {
                 Average Delay Saved: <b>+1h 55m</b> per shipment. Delay reduction: <b>42%</b>.
               </div>
               <button onclick="window.stopDemoScenario()" class="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">
-                Exit Demonstration Mode
+                Exit Scenario
               </button>
             </div>
           `;
@@ -240,7 +240,7 @@ window.startDemoScenario = function() {
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-2">
               <span class="text-emerald-400 text-lg">✓</span>
-              <h4 class="font-bold text-white text-sm">Demonstration Complete</h4>
+              <h4 class="font-bold text-white text-sm">Scenario Complete</h4>
             </div>
             <button onclick="document.getElementById('demo-status-card').classList.add('hidden')" class="text-slate-400 hover:text-white font-bold text-base leading-none">&times;</button>
           </div>
@@ -248,7 +248,7 @@ window.startDemoScenario = function() {
             The scenario showed how weather sensing, risk warnings, and incident simulations trigger instant, explainable AI reroutes.
           </p>
           <button onclick="window.stopDemoScenario()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded text-xs transition">
-            Reset Grid &amp; Exit Demo
+            Reset Scenario
           </button>
         `;
       },

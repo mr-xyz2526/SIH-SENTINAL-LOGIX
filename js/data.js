@@ -1,4 +1,4 @@
-// NER-LINK AI - Centralized Mock Data Store
+// SENTINEL LOGIX AI - Centralized Sample Data Store
 // Exposes window.nerData to modular scripting components
 
 window.nerData = {
@@ -208,4 +208,4 @@ window.nerData = {
     after: { delay: "1h 26m", reliability: "89%", response: "12 min" }
   }
 };
-console.log("NER-LINK AI: Data store initialized successfully.", window.nerData);
+console.log("SENTINEL: Sample data initialized.", window.nerData);

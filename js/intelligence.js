@@ -231,7 +231,7 @@ window.fetchReadinessSectionData = async function () {
 
   } catch (err) {
     console.warn("[SENTINEL Readiness] API unavailable:", err.message);
-    container.innerHTML = '<div class="col-span-full text-center py-12 space-y-2"><div class="text-2xl">&#9888;</div><div class="text-xs text-red-400 font-bold">Readiness API Unavailable</div><div class="text-[10px] text-slate-500">Ensure the FastAPI backend is running on port 8001.</div></div>';
+    container.innerHTML = '<div class="col-span-full text-center py-12 space-y-2"><div class="text-2xl">&#9888;</div><div class="text-xs text-red-400 font-bold">Readiness data is temporarily unavailable</div><div class="text-[10px] text-slate-500">Please try again in a moment.</div></div>';
   }
 };
 
@@ -383,8 +383,8 @@ window.runDigitalTwinSimulation = async function () {
     if (window.clearDigitalTwinMapOverlay) window.clearDigitalTwinMapOverlay();
     if (pillEl) { pillEl.innerText = "SIMULATION FAILED"; pillEl.className = "text-[9px] bg-red-950 text-red-400 border border-red-500/40 px-2 py-0.5 rounded font-mono font-bold uppercase"; }
     
-    resultsEl.innerHTML = '<div class="p-6 bg-red-950/20 border border-red-500/30 rounded-xl space-y-2"><div class="flex items-center gap-2 text-red-400 font-bold text-sm"><span>⚠️</span> Simulation Error</div><p class="text-slate-300 text-xs">' + err.message + '</p><div class="text-[10px] text-slate-500 font-mono">Ensure parameters meet backend constraints and server is running on port 8001.</div></div>';
-    if (window.showToast) window.showToast("Simulation error: " + err.message, "error");
+    resultsEl.innerHTML = '<div class="p-6 bg-red-950/20 border border-red-500/30 rounded-xl space-y-2"><div class="flex items-center gap-2 text-red-400 font-bold text-sm"><span>⚠️</span> Simulation could not be completed</div><p class="text-slate-300 text-xs">Check the selected scenario details and try again.</p></div>';
+    if (window.showToast) window.showToast("Simulation could not be completed. Please try again.", "error");
 
   } finally {
     // Unlock Controls
@@ -743,13 +743,13 @@ function applyIntelligenceModuleStatus(data) {
   if (!row) return;
   var status = data.intelligence_status || {};
   var modules = [
-    { key: "operational_data",       label: "Ops Data",       icon: "🗺️" },
+    { key: "operational_data",       label: "Operations",     icon: "🗺️" },
     { key: "inventory",              label: "Inventory",      icon: "📦" },
     { key: "forecasting",            label: "Forecasting",    icon: "📈" },
-    { key: "risk_engine",            label: "Risk Engine",    icon: "⚠️" },
+    { key: "risk_engine",            label: "Route risk",     icon: "⚠️" },
     { key: "readiness_engine",       label: "Readiness",      icon: "🎯" },
-    { key: "environmental_intelligence", label: "Env Intel", icon: "🌦️" },
-    { key: "supply_movement",        label: "Supply Mvmt",    icon: "🚚" },
+    { key: "environmental_intelligence", label: "Weather & terrain", icon: "🌦️" },
+    { key: "supply_movement",        label: "Supply movement", icon: "🚚" },
     { key: "digital_twin",           label: "Digital Twin",   icon: "📦" },
     { key: "advisor",                label: "Advisor",        icon: "🤖" }
   ];
@@ -763,7 +763,7 @@ function applyIntelligenceModuleStatus(data) {
       ? "bg-emerald-950/50 border-emerald-500/30 text-emerald-400"
       : "bg-red-950/50 border-red-500/30 text-red-400";
     var dot = isWarn ? "text-slate-400" : isOk ? "text-emerald-400" : "text-red-400";
-    var label = isWarn ? "STANDBY" : s;
+    var label = isWarn ? "Standby" : s === "AVAILABLE" ? "Available" : s === "ACTIVE" ? "Active" : s === "READY" ? "Ready" : "Unavailable";
     return '<div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border ' + cls + ' text-[10px] font-mono font-bold">' +
       '<span class="' + dot + ' text-[8px]">●</span>' +
       '<span class="text-slate-300 text-[9px]">' + m.icon + '</span>' +
@@ -780,7 +780,7 @@ function applyIntelligenceModuleStatus(data) {
       return s !== "AVAILABLE" && s !== "ACTIVE" && s !== "NO_ACTIVE_SCENARIO" && s !== "READY";
     }).length;
     if (unavailableCount === 0) {
-      badge.innerText = "LIVE";
+      badge.innerText = "READY";
       badge.className = "text-[8px] bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono";
     } else {
       badge.innerText = unavailableCount + " DOWN";
@@ -992,11 +992,11 @@ function updateSidebarBadges(data) {
   var status = readiness.overall_readiness_status || "READY";
 
   var forecastBadge = document.getElementById("sidebar-forecast-badge");
-  if (forecastBadge) { forecastBadge.innerText = "LIVE"; forecastBadge.className = "text-[8px] bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono"; }
+  if (forecastBadge) { forecastBadge.innerText = "READY"; forecastBadge.className = "text-[8px] bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded font-mono"; }
 
   var readinessBadge = document.getElementById("sidebar-readiness-badge");
   if (readinessBadge) {
-    var label = status === "CRITICAL" ? "CRITICAL" : status === "DEGRADED" ? "DEGRADED" : status === "CAUTION" ? "CAUTION" : "LIVE";
+    var label = status === "CRITICAL" ? "CRITICAL" : status === "DEGRADED" ? "DEGRADED" : status === "CAUTION" ? "CAUTION" : "READY";
     var cls = status === "CRITICAL" ? "bg-red-950 text-red-400 border-red-500/30" : status === "DEGRADED" ? "bg-orange-950 text-orange-400 border-orange-500/30" : status === "CAUTION" ? "bg-amber-950 text-amber-400 border-amber-500/30" : "bg-emerald-950 text-emerald-400 border-emerald-500/30";
     readinessBadge.innerText = label;
     readinessBadge.className = "text-[8px] " + cls + " border px-1.5 py-0.5 rounded font-mono";

@@ -1,4 +1,4 @@
-// NER-LINK AI - Global Natural Language Command Search
+// SENTINEL LOGIX AI - Global Operations Search
 
 window.executeGlobalSearch = function(query) {
   const q = query.toLowerCase().trim();

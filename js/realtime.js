@@ -1,4 +1,4 @@
-// NER-LINK AI - Real-Time Telemetry & Predictive Rerouting Engine
+// SENTINEL LOGIX AI - Live Telemetry & Predictive Rerouting
 // Implements continuous multi-sensor telemetry, dynamic graph routing (Dijkstra),
 // real-time vehicle movement, and autonomous/operator predictive rerouting.
 
@@ -684,7 +684,7 @@
         </div>
 
         <p class="text-xs text-slate-300 leading-relaxed mb-4">
-          NER-LINK AI telemetry detected an imminent disruption: <b class="text-white">${proposal.hazardReason}</b> along <b class="text-amber-300">${proposal.hazardLocation}</b>. 
+          SENTINEL detected a potential disruption: <b class="text-white">${proposal.hazardReason}</b> along <b class="text-amber-300">${proposal.hazardLocation}</b>.
           To prevent vehicle halt, an alternate bypass corridor has been calculated.
         </p>
 
@@ -831,7 +831,7 @@
     window.realtimeConfig.running = true;
     window.initFleetTelemetry();
     window.realtimeConfig.activeTimerId = setInterval(window.realtimeTick, window.realtimeConfig.tickIntervalMs);
-    console.log("NER-LINK AI: Real-Time Telemetry & Predictive Engine started.");
+    console.log("SENTINEL: Live movement updates started.");
   };
 
   window.stopRealtimeEngine = function() {
@@ -932,9 +932,9 @@
         self.ws.onopen = function() {
           self.connected = true;
           self.updateStatusBadge("connected");
-          console.log("[NER-LINK] Connected to FastAPI WebSocket Engine:", wsUrl);
+          console.log("[SENTINEL] Live data connection established:", wsUrl);
           if (window.showToast) {
-            window.showToast("🟢 Live Telemetry Stream Connected (FastAPI WebSocket)", "success");
+            window.showToast("🟢 Live movement updates connected", "success");
           }
         };
 
@@ -975,7 +975,7 @@
       if (state === "connected") {
         badge.className = "bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 font-bold text-[10px] px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition";
         dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
-        text.innerText = "FASTAPI BACKEND: ONLINE";
+        text.innerText = "LIVE UPDATES: ONLINE";
       } else {
         badge.className = "bg-slate-900 border border-slate-700 text-slate-400 font-bold text-[10px] px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition";
         dot.className = "w-2 h-2 rounded-full bg-amber-500";

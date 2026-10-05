@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NER-LINK AI | Driver Telemetry Cockpit</title>
+    <title>SENTINEL LOGIX AI | Driver Cockpit</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -339,12 +339,12 @@
     <!-- Header -->
     <div class="header">
         <div class="brand">
-            <span class="brand-badge">NER-LINK</span>
+            <span class="brand-badge">SENTINEL</span>
             <span class="brand-title">Driver Cockpit</span>
         </div>
         <div class="status-pill" id="connPill">
             <span class="pulse-dot"></span>
-            <span id="connStatusText">ONLINE</span>
+            <span id="connStatusText">NETWORK ON</span>
         </div>
     </div>
 
@@ -430,11 +430,11 @@
         <!-- Telemetry Ingestion Mode -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title"><i class="fa-solid fa-location-crosshairs"></i> Telemetry Mode</span>
+                <span class="card-title"><i class="fa-solid fa-location-crosshairs"></i> Location Source</span>
             </div>
             <div class="segmented-control">
                 <button class="seg-btn active" id="modeSim" onclick="setTelemetryMode('sim')">
-                    <i class="fa-solid fa-route"></i> Route Sim
+                    <i class="fa-solid fa-route"></i> Simulated Route
                 </button>
                 <button class="seg-btn" id="modeGps" onclick="setTelemetryMode('gps')">
                     <i class="fa-solid fa-satellite"></i> Device GPS
@@ -456,19 +456,19 @@
                     <div class="tel-value" id="valSpeed">0 km/h</div>
                 </div>
                 <div class="telemetry-item">
-                    <div class="tel-label">Heading / Alt</div>
+                    <div class="tel-label">Heading / Altitude</div>
                     <div class="tel-value" id="valHeadingAlt">--° / --m</div>
                 </div>
             </div>
 
             <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
                 <span style="color: var(--text-muted);"><i class="fa-solid fa-battery-half"></i> Battery: <strong id="valBattery" style="color:var(--text-primary)">94%</strong></span>
-                <span style="color: var(--text-muted);">Queued Buffer: <span class="buffer-badge" id="bufferCount">0</span></span>
+                <span style="color: var(--text-muted);">Updates waiting to sync: <span class="buffer-badge" id="bufferCount">0</span></span>
             </div>
 
             <div style="margin-top: 10px;" id="syncBtnContainer" style="display:none;">
                 <button class="btn btn-outline" id="manualSyncBtn" onclick="flushOfflineBuffer()" disabled>
-                    <i class="fa-solid fa-rotate"></i> Sync Buffered Telemetry (<span id="bufferCountBtn">0</span>)
+                    <i class="fa-solid fa-rotate"></i> Sync Pending Updates (<span id="bufferCountBtn">0</span>)
                 </button>
             </div>
         </div>
@@ -476,10 +476,10 @@
         <!-- Quick Road Hazard Report -->
         <div class="card">
             <div class="card-header">
-                <span class="card-title"><i class="fa-solid fa-triangle-exclamation"></i> Instant Hazard Report</span>
+                <span class="card-title"><i class="fa-solid fa-triangle-exclamation"></i> Report a Road Hazard</span>
             </div>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
-                Report an encountered road impediment directly to the NER Control Room.
+                Send a road hazard report to the SENTINEL operations team.
             </p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <button class="btn btn-hazard" onclick="reportHazard('LANDSLIDE', 'Active Landslide / Debris Flow')">
@@ -497,16 +497,14 @@
             </div>
         </div>
 
-        <!-- Telemetry Logs -->
-        <div class="card">
-            <div class="card-header">
-                <span class="card-title"><i class="fa-solid fa-terminal"></i> Telemetry Terminal</span>
-                <span style="font-size: 11px; color: var(--accent-cyan); cursor: pointer;" onclick="clearLogs()">Clear</span>
-            </div>
+        <details class="card">
+            <summary class="card-header" style="cursor: pointer; list-style: none;">
+                <span class="card-title">Connection details</span>
+            </summary>
             <div class="log-box" id="logBox">
                 <div class="log-entry"><span class="log-time">[Init]</span> Cockpit initialized. Select vehicle and start trip.</div>
             </div>
-        </div>
+        </details>
     </div>
 </div>
 
@@ -582,10 +580,10 @@
         try {
             const res = await fetch(`${API_BASE}/api/health`);
             if (res.ok) {
-                log('Connected to NER-LINK AI Core Backend', 'success');
+                log('Connected to SENTINEL services', 'success');
             }
         } catch (e) {
-            log('Backend offline. Buffered mode enabled.', 'warn');
+            log('Connection unavailable. Updates will sync when service returns.', 'warn');
         }
     }
 
@@ -596,7 +594,7 @@
         try {
             ws = new WebSocket(url);
             ws.onopen = () => {
-                log(`WebSocket tunnel open for ${vid}`, 'success');
+                log(`Live connection established for ${vid}`, 'success');
             };
             ws.onmessage = (e) => {
                 const data = JSON.parse(e.data);
@@ -625,14 +623,14 @@
         const statusText = document.getElementById('connStatusText');
         if (online) {
             pill.className = 'status-pill';
-            statusText.textContent = 'ONLINE';
-            log('Network restored. Cell tower re-acquired.', 'success');
+            statusText.textContent = 'NETWORK ON';
+            log('Connection restored. Uploading saved updates.', 'success');
             flushOfflineBuffer();
             initWebSocket();
         } else {
             pill.className = 'status-pill offline';
-            statusText.textContent = 'OFFLINE (DEAD-ZONE)';
-            log('Entered cellular dead zone. Buffering telemetry.', 'warn');
+            statusText.textContent = 'NO SIGNAL';
+            log('Connection lost. Updates are being saved on this device.', 'warn');
             if (ws) ws.close();
         }
     }
@@ -659,11 +657,11 @@
                 currentPos.heading = pos.coords.heading || 0;
                 updateTelemetryUI();
             }, (err) => {
-                log(`GPS Error: ${err.message}. Falling back to simulation.`, 'warn');
+                log('Device location unavailable. Switching to route preview.', 'warn');
                 setTelemetryMode('sim');
             }, { enableHighAccuracy: true });
         } else {
-            log('Device Geolocation not supported', 'err');
+            log('Device location is not available on this device.', 'err');
             setTelemetryMode('sim');
         }
     }
@@ -731,7 +729,7 @@
             // Store locally in offline queue
             offlineBuffer.push(payload);
             updateBufferUI();
-            log(`[Dead Zone] Buffered ping #${offlineBuffer.length}`, 'warn');
+            log('Update saved and will sync when the connection returns.', 'warn');
             return;
         }
 
@@ -750,7 +748,7 @@
                 // If network send failed, buffer it
                 offlineBuffer.push(payload);
                 updateBufferUI();
-                log(`Send failed: ${err.message}. Queued point.`, 'err');
+                log('Update could not be sent. Saved for retry.', 'warn');
             }
         }
     }
@@ -767,7 +765,7 @@
         if (offlineBuffer.length === 0) return;
         const vid = document.getElementById('vehicleSelect').value;
         const count = offlineBuffer.length;
-        log(`Flushing ${count} buffered telemetry points to backend...`);
+        log(`Syncing ${count} saved updates...`);
 
         try {
             const res = await fetch(`${API_BASE}/api/locations/sync`, {
@@ -780,14 +778,14 @@
                 })
             });
             if (res.ok) {
-                log(`Successfully synchronized ${count} offline telemetry pings!`, 'success');
+                log(`${count} saved updates synced successfully.`, 'success');
                 offlineBuffer = [];
                 updateBufferUI();
             } else {
-                log(`Batch sync rejected: ${res.statusText}`, 'err');
+                log('Updates could not be synced. Please try again.', 'err');
             }
         } catch (e) {
-            log(`Failed to sync buffer: ${e.message}`, 'err');
+            log('Sync failed. Your updates remain saved on this device.', 'err');
         }
     }
 
@@ -873,13 +871,13 @@
                 body: JSON.stringify(payload)
             });
             if (res.ok) {
-                log(`[HAZARD BROADCASTED] ${type} sent to Control Room!`, 'err');
+                log(`${type} report sent to the SENTINEL operations team.`, 'success');
                 alert(`Hazard broadcasted! Control room and rerouting engine notified.`);
             } else {
-                log(`Failed to report hazard: ${res.statusText}`, 'err');
+                log('Hazard report could not be sent. Please try again.', 'err');
             }
         } catch (e) {
-            log(`Hazard report error: ${e.message}`, 'err');
+            log('Hazard report could not be sent. Please try again.', 'err');
         }
     }
 </script>

@@ -1,4 +1,4 @@
-// NER-LINK AI - Leaflet Map Integration, Real-Time Fleet Tracking & Predictive Detour Visualization
+// SENTINEL LOGIX AI - Fleet Map & Predictive Detour Visualization
 
 window.nerMap = null;
 window.mapLayers = {
@@ -15,7 +15,7 @@ window.mapLayers = {
 
 // Check if Leaflet is loaded
 window.initNERMap = function() {
-  const mapContainer = document.getElementById("map");
+  const mapContainer = document.getElementById("map-canvas");
   if (!mapContainer) return;
 
   // Cleanup if already exists
@@ -25,7 +25,7 @@ window.initNERMap = function() {
 
   try {
     // Initialize map centered on North East India (Jorhat / Nagaon area)
-    window.nerMap = L.map("map", {
+    window.nerMap = L.map("map-canvas", {
       center: [25.9, 92.5],
       zoom: 7,
       minZoom: 6,
@@ -478,7 +478,7 @@ function renderMapDetourHUD(proposal) {
 
   let hud = document.getElementById("map-detour-hud");
   if (!hud) {
-    const mapEl = document.getElementById("map");
+    const mapEl = document.getElementById("map-canvas");
     const mapContainer = mapEl ? mapEl.parentElement : document.body;
     hud = document.createElement("div");
     hud.id = "map-detour-hud";
@@ -744,7 +744,8 @@ window.clearDigitalTwinMapOverlay = function() {
 };
 
 function renderDigitalTwinMapHUD(result, corridorMatched) {
-  const mapContainer = document.getElementById("map") ? document.getElementById("map").parentElement : null;
+  const mapCanvas = document.getElementById("map-canvas");
+  const mapContainer = mapCanvas ? mapCanvas.parentElement : null;
   if (!mapContainer) return;
 
   let hud = document.getElementById("digital-twin-map-hud");

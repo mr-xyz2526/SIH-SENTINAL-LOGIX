@@ -1,4 +1,4 @@
-// NER-LINK AI - Intelligent Operations Copilot chatbot
+// SENTINEL LOGIX AI - Intelligent Operations Copilot
 
 window.copilotReplies = {
   routes: {
@@ -55,7 +55,7 @@ window.copilotReplies = {
     ]
   },
   default: {
-    text: "I am the NER-LINK AI Operations Copilot. How can I assist you with logistics grid management today?<br><br>" +
+    text: "I am the SENTINEL Logistics Advisor. How can I help with your logistics operations today?<br><br>" +
           "You can ask me about:<br>" +
           "• <i>Guwahati to Imphal route safety</i><br>" +
           "• <i>High risk corridors</i><br>" +
@@ -152,7 +152,7 @@ window.askAICopilot = function(query) {
       <div class="max-w-[85%] bg-slate-800/80 border border-slate-700/50 text-slate-200 rounded-lg rounded-tl-none px-3.5 py-2 text-xs">
         <div class="flex items-center gap-1.5 text-blue-400 font-bold mb-1">
           <span>🤖</span>
-          <span>NER-LINK Copilot</span>
+          <span>SENTINEL Advisor</span>
         </div>
         <div>${replyData.text}</div>
         ${actionsHtml}

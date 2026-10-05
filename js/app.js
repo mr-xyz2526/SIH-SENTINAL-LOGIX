@@ -1,4 +1,4 @@
-// NER-LINK AI - Main Application Controller
+// SENTINEL LOGIX AI - Main Application Controller
 
 document.addEventListener("DOMContentLoaded", () => {
   // Initialize navigation & view routers
@@ -48,6 +48,12 @@ window.switchTab = function(tabId) {
     } else {
       item.classList.remove("active");
     }
+  });
+
+  const activeItem = Array.from(navItems).find(item => item.getAttribute("data-tab") === tabId);
+  const activeGroup = activeItem ? activeItem.closest(".nav-group") : null;
+  document.querySelectorAll(".nav-group").forEach(group => {
+    group.open = group === activeGroup;
   });
 
   // Toggle visible sections
@@ -108,6 +114,15 @@ window.initAppRouting = function() {
     item.addEventListener("click", () => {
       const tabId = item.getAttribute("data-tab");
       window.switchTab(tabId);
+    });
+  });
+
+  document.querySelectorAll(".nav-group").forEach(group => {
+    group.addEventListener("toggle", () => {
+      if (!group.open) return;
+      document.querySelectorAll(".nav-group").forEach(otherGroup => {
+        if (otherGroup !== group) otherGroup.open = false;
+      });
     });
   });
 
